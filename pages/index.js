@@ -27,11 +27,23 @@ const DUMMY_MEETUPS = [
     description: '23d',
   },
 ];
-export default function HomePage() {
+export default function HomePage(props) {
   const [loadedMeetups, setLoadedMeettups] = useState([]);
   useEffect(() => {
     // send http request and fetch data
     setLoadedMeettups(DUMMY_MEETUPS);
   }, []);
-  return <MeetupList meetups={loadedMeetups} />;
+  return <MeetupList meetups={props.meetups} />;
+}
+
+export async function getStaticProps() {
+  // executes during the build process
+  // the code here will never appear in the client browser
+  // props returned here go to props of the page component props
+  return {
+    props: {
+      meetups: DUMMY_MEETUPS
+    }
+  }
+
 }

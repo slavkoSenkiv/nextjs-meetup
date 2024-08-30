@@ -12,18 +12,16 @@ export default function MeetupDetails() {
 }
 
 export async function getStaticPaths() {
-  // in ideal worls this  path array of Ids has to be not hardcodded
-  // but fetched from the db and generated dynamically
   return {
-    fallback: false, 
+    fallback: false,
     //if user enters anything that is not supported in the array:
     //fallback = false => means paths array contains all possible arrays => he gets 404
     //fallback = true  => nextjs will try to generate the page for this id dynamically on the server
     paths: [
-      {
-        params: {meetupId: 'm1'},
-        params: {meetupId: 'm2'},
-      },
+      // in ideal worls this  path array of Ids has to be not hardcodded
+      // but fetched from the db and generated dynamically
+      { params: { meetupId: 'm1' } },
+      { params: { meetupId: 'm2' } },
     ],
   };
 }

@@ -1,7 +1,7 @@
+import { MongoClient } from 'mongodb';
 import MeetupList from '../components/meetups/MeetupList';
-import { useEffect, useState } from 'react';
 
-const DUMMY_MEETUPS = [
+/* const DUMMY_MEETUPS = [
   {
     id: 'm1',
     title: 'A first Meetup',
@@ -26,13 +26,9 @@ const DUMMY_MEETUPS = [
     address: 'some address here 123 123 123',
     description: '23d',
   },
-];
+]; */
+
 export default function HomePage(props) {
-  const [loadedMeetups, setLoadedMeettups] = useState([]);
-  useEffect(() => {
-    // send http request and fetch data
-    setLoadedMeettups(DUMMY_MEETUPS);
-  }, []);
   return <MeetupList meetups={props.meetups} />;
 }
 
@@ -53,10 +49,25 @@ export async function getStaticProps() {
   // executes during the build process
   // the code here will never appear in the client browser
   // props returned here go to props of the page component props
+  const client = await MongoClient.connect(process.env.DB_URL);
+
+  const db = client.db();
+
+  const meetupsCollection = db.collection('meetups');
+
+  const meetups = await meetupsCollection.find().toArray();
+
+  client.close();
+
   return {
     props: {
-      meetups: DUMMY_MEETUPS
+      meetups: meetups.map((meetup) => ({
+        title: meetup.title,
+        address: meetup.address,
+        image: meetup.image,
+        id: meetup._id.toString(),
+      })),
     },
-    revalidate: 10
-  }
+    revalidate: 1,
+  };
 }

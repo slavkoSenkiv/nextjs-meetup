@@ -31,7 +31,8 @@ export async function getStaticPaths() {
 
   client.close();
   return {
-    fallback: false,
+    //fallback: false,
+    fallback: 'blocking', // Changed from 'false' to 'blocking'
     //if user enters anything that is not supported in the array:
     //fallback = false => means paths array contains all possible arrays => he gets 404
     //fallback = true  => nextjs will try to generate the page for this id dynamically on the server
@@ -72,5 +73,6 @@ export async function getStaticProps(context) {
         description: selectedMeetup.description,
       },
     },
+    revalidate: 2,
   };
 }

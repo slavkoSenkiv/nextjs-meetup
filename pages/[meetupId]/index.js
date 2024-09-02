@@ -31,11 +31,12 @@ export async function getStaticPaths() {
 
   client.close();
   return {
-    //fallback: false,
+    //fallback: false, 
     fallback: 'blocking',
     //if user enters anything that is not supported in the array:
-    //fallback = false => means paths array contains all possible arrays => he gets 404
-    //fallback = true  => nextjs will try to generate the page for this id dynamically on the server
+    //fallback = false => means paths array contains all possible arrays => i.e user gets 404 if page was added after build time
+    //fallback = true  => its says nextjs there might be more valid pages, nextjs will try to generate the page for this id dynamically on the server, even for those that were added after build
+    //fallback = 'blocking' => same as true, though with true page might be missing data while with blocking user won't see anything untill the page was pregenerated and complete page will be served
     paths: meetups.map((meetup) => ({
       params: { meetupId: meetup._id.toString() },
     })),
@@ -75,4 +76,4 @@ export async function getStaticProps(context) {
     },
     revalidate: 2,
   };
-} 
+}

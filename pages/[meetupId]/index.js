@@ -46,7 +46,7 @@ export async function getStaticPaths() {
   };
 }
 
-/* export async function getStaticProps(context) {
+export async function getStaticProps(context) {
   // fetch data for a single meetup
   const meetupId = context.params.meetupId;
 
@@ -75,45 +75,4 @@ export async function getStaticPaths() {
     },
     revalidate: 2,
   };
-} */
-  export async function getStaticProps(context) {
-    const meetupId = context.params.meetupId;
-  
-    try {
-      const client = await MongoClient.connect(process.env.DB_URL);
-      const db = client.db();
-      const meetupsCollection = db.collection('meetups');
-      const meetupIdObject = new ObjectId(meetupId);
-      const selectedMeetup = await meetupsCollection.findOne({
-        _id: meetupIdObject,
-      });
-  
-      if (!selectedMeetup) {
-        return {
-          notFound: true,
-        };
-      }
-  
-      client.close();
-  
-      return {
-        props: {
-          meetupData: {
-            id: selectedMeetup._id.toString(),
-            title: selectedMeetup.title,
-            address: selectedMeetup.address,
-            image: selectedMeetup.image,
-            description: selectedMeetup.description,
-          },
-        },
-        revalidate: 2,
-      };
-    } catch (error) {
-      console.error('Failed to fetch meetup data:', error);
-  
-      return {
-        notFound: true,
-      };
-    }
-  }
-  
+} 
